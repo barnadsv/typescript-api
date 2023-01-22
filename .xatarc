@@ -1,0 +1,6 @@
+{
+  "databaseURL": "https://Leonardo-de-Araujo-Barnab-s-workspace-7bgpqi.us-east-1.xata.sh/db/job-board",
+  "codegen": {
+    "output": "src/xata.ts"
+  }
+}
