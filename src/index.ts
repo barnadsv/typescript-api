@@ -1,23 +1,38 @@
 import express, { Express, Request, Response } from 'express'
 import dotenv from 'dotenv'
+import { getXataClient, Job } from './xata'
+
+dotenv.config()
 
 const app: Express = express()
 const port = process.env.PORT || 3000
 
-app.get('/api/jobs', (req: Request, res: Response) => {
-    res.json({ msg: 'Hello Get jobs' })
+app.use(express.json())
+
+const xata = getXataClient()
+
+app.get('/api/jobs', async (req: Request, res: Response) => {
+    const jobs = await xata.db.job.getAll()
+    res.json(jobs)
 })
 
-app.post('/api/jobs/:id', (req: Request, res: Response) => {
-    res.json({ msg: 'Hello Post job' })
+app.post('/api/jobs', async (req: Request, res: Response) => {
+    const job = req.body
+    const createdJob = await xata.db.job.create(job)
+    res.json(createdJob)
 })
 
-app.put('/api/jobs/:id', (req: Request, res: Response) => {
-    res.json({ msg: 'Hello Put job' })
+app.put('/api/jobs/:id', async (req: Request, res: Response) => {
+    const id = req.params.id
+    const job = req.body
+    const updatedJob = await xata.db.job.update(id, job)
+    res.json(updatedJob)
 })
 
-app.delete('/api/jobs/:id', (req: Request, res: Response) => {
-    res.json({ msg: 'Hello Delete job' })
+app.delete('/api/jobs/:id', async (req: Request, res: Response) => {
+    const id = req.params.id
+    const deletedJob = await xata.db.job.delete(id)
+    res.json(deletedJob)
 })
 
 app.listen(port, () => {
